@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FastAPI Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #4a6fa5;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #4a6fa5;
+            color: white;
+            flex-grow: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5a80;
+        }
+
+        .field-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .form-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-subheader {
+            color: #666;
+            font-size: 16px;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #4a6fa5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .forgot-password a {
+            color: #4a6fa5;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+        .remember-me label {
+            margin-bottom: 0;
+            font-weight: normal;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Alert styles */
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .alert.show {
+            opacity: 1;
+        }
+
+        .alert-error {
+            background-color: #fde8e8;
+            border-left: 4px solid #e53e3e;
+            color: #c53030;
+        }
+
+        .alert-success {
+            background-color: #e6f6e6;
+            border-left: 4px solid #38a169;
+            color: #2f855a;
+        }
+
+        .alert-icon {
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex-grow: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .alert-message {
+            font-size: 14px;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: inherit;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 0 0 10px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>FastAPI Blog</h1>
+        </header>
+
+        <div class="form-container">
+            <!-- Alert Templates -->
+            <div id="alertSuccess" class="alert alert-success" style="display: none;">
+                <div class="alert-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM12 20C16.418 20 20 16.418 20 12C20 7.582 16.418 4 12 4C7.582 4 4 7.582 4 12C4 16.418 7.582 20 12 20ZM16.293 7.293L10 13.586L7.707 11.293L6.293 12.707L10 16.414L17.707 8.707L16.293 7.293Z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Success!</div>
+                    <div class="alert-message">You are now logged in.</div>
+                </div>
+                <button class="alert-close" onclick="hideAlert('alertSuccess')">&times;</button>
+            </div>
+
+            <div id="alertError" class="alert alert-error" style="display: none;">
+                <div class="alert-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM12 20C16.418 20 20 16.418 20 12C20 7.582 16.418 4 12 4C7.582 4 4 7.582 4 12C4 16.418 7.582 20 12 20ZM13 12V7H11V12H13ZM13 16V14H11V16H13Z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Error!</div>
+                    <div id="error-message" class="alert-message">Invalid email or password.</div>
+                </div>
+                <button class="alert-close" onclick="hideAlert('alertError')">&times;</button>
+            </div>
+
+            <div class="form-header">
+                <h2>Welcome Back</h2>
+                <p class="form-subheader">Login to your account</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <div class="forgot-password">
+                        <a href="/forgot-password">Forgot password?</a>
+                    </div>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                    <label for="rememberMe">Remember me</label>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+
+            <div class="register-link">
+                Don't have an account? <a href="/register">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAlert(id, message = null) {
+            const alert = document.getElementById(id);
+    
+            if (message && id === 'alertError') {
+                document.getElementById('error-message').textContent = message;
+            }
+    
+            alert.style.display = 'flex';
+    
+            void alert.offsetWidth;
+    
+            alert.classList.add('show');
+    
+            if (id === 'alertSuccess') {
+                setTimeout(() => {
+                    hideAlert(id);
+                }, 5000);
+            }
+        }
+    
+        function hideAlert(id) {
+            const alert = document.getElementById(id);
+            alert.classList.remove('show');
+    
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 300);
+        }
+    
+        const loginForm = document.getElementById('loginForm');
+    
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+    
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            if (!email || !password) {
+                showAlert('alertError', 'Please fill in all fields');
+                return;
+            }
+    
+            const loginData = {
+                email,
+                password,
+            };
+    
+            fetch('http://127.0.0.1:8000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include', // 👈 MUY IMPORTANTE para enviar/recibir cookies
+                body: JSON.stringify(loginData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.detail || 'Invalid credentials');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showAlert('alertSuccess');
+    
+                    setTimeout(() => {
+                        // Ya que el token va en cookie, solo redirigimos
+                        window.location.href = '/posts-auth';
+                    }, 1000);
+                })
+                .catch(error => {
+                    showAlert('alertError', error.message || 'Login failed');
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+    
+</body>
+
+</html>

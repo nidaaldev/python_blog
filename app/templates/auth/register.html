@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - FastAPI Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #4a6fa5;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+        
+        .password-strength {
+            margin-top: 8px;
+            height: 5px;
+            border-radius: 3px;
+            background-color: #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .password-strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .password-feedback {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #666;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: #4a6fa5;
+            color: white;
+            flex-grow: 1;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a80;
+        }
+        
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+            margin-right: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .field-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .form-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .form-subheader {
+            color: #666;
+            font-size: 16px;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .login-link a {
+            color: #4a6fa5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Alert styles */
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .alert.show {
+            opacity: 1;
+        }
+        
+        .alert-error {
+            background-color: #fde8e8;
+            border-left: 4px solid #e53e3e;
+            color: #c53030;
+        }
+        
+        .alert-success {
+            background-color: #e6f6e6;
+            border-left: 4px solid #38a169;
+            color: #2f855a;
+        }
+        
+        .alert-icon {
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .alert-content {
+            flex-grow: 1;
+        }
+        
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .alert-message {
+            font-size: 14px;
+        }
+        
+        .alert-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: inherit;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .alert-close:hover {
+            opacity: 1;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 0 0 10px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>FastAPI Blog</h1>
+        </header>
+
+        <div class="form-container">
+            <!-- Alert Templates -->
+            <div id="alertSuccess" class="alert alert-success" style="display: none;">
+                <div class="alert-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM12 20C16.418 20 20 16.418 20 12C20 7.582 16.418 4 12 4C7.582 4 4 7.582 4 12C4 16.418 7.582 20 12 20ZM16.293 7.293L10 13.586L7.707 11.293L6.293 12.707L10 16.414L17.707 8.707L16.293 7.293Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Success!</div>
+                    <div class="alert-message">Your account has been created successfully.</div>
+                </div>
+                <button class="alert-close" onclick="hideAlert('alertSuccess')">&times;</button>
+            </div>
+
+            <div id="alertError" class="alert alert-error" style="display: none;">
+                <div class="alert-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM12 20C16.418 20 20 16.418 20 12C20 7.582 16.418 4 12 4C7.582 4 4 7.582 4 12C4 16.418 7.582 20 12 20ZM13 12V7H11V12H13ZM13 16V14H11V16H13Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Error!</div>
+                    <div id="error-message" class="alert-message">There was a problem creating your account.</div>
+                </div>
+                <button class="alert-close" onclick="hideAlert('alertError')">&times;</button>
+            </div>
+
+            <div class="form-header">
+                <h2>Create Account</h2>
+                <p class="form-subheader">Join our blog community</p>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <p class="field-hint">We'll never share your email with anyone else</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                    <div class="password-strength">
+                        <div id="passwordStrengthMeter" class="password-strength-meter"></div>
+                    </div>
+                    <p id="passwordFeedback" class="password-feedback">Password must be at least 8 characters</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat your password" required>
+                    <p id="confirmPasswordFeedback" class="field-hint">Both passwords must match</p>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="/login">Log in</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password strength meter
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordStrengthMeter = document.getElementById('passwordStrengthMeter');
+        const passwordFeedback = document.getElementById('passwordFeedback');
+        const confirmPasswordFeedback = document.getElementById('confirmPasswordFeedback');
+        
+        passwordInput.addEventListener('input', updatePasswordStrength);
+        confirmPasswordInput.addEventListener('input', checkPasswordsMatch);
+        
+        function updatePasswordStrength() {
+            const password = passwordInput.value;
+            let strength = 0;
+            let feedback = '';
+            
+            if (password.length === 0) {
+                strength = 0;
+                feedback = 'Password must be at least 8 characters';
+            } else if (password.length < 8) {
+                strength = 20;
+                feedback = 'Password is too short';
+            } else {
+                strength += 20;
+                
+                // Check for mixed case
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+                    strength += 20;
+                }
+                
+                // Check for numbers
+                if (password.match(/\d/)) {
+                    strength += 20;
+                }
+                
+                // Check for special characters
+                if (password.match(/[^a-zA-Z\d]/)) {
+                    strength += 20;
+                }
+                
+                // Check for length
+                if (password.length >= 12) {
+                    strength += 20;
+                }
+                
+                // Feedback based on strength
+                if (strength <= 40) {
+                    feedback = 'Password is weak';
+                } else if (strength <= 70) {
+                    feedback = 'Password is moderate';
+                } else {
+                    feedback = 'Password is strong';
+                }
+            }
+            
+            // Update UI
+            passwordStrengthMeter.style.width = strength + '%';
+            
+            // Update color based on strength
+            if (strength <= 40) {
+                passwordStrengthMeter.style.backgroundColor = '#e53e3e';
+            } else if (strength <= 70) {
+                passwordStrengthMeter.style.backgroundColor = '#f6ad55';
+            } else {
+                passwordStrengthMeter.style.backgroundColor = '#38a169';
+            }
+            
+            passwordFeedback.textContent = feedback;
+        }
+        
+        function checkPasswordsMatch() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (confirmPassword.length === 0) {
+                confirmPasswordFeedback.textContent = 'Both passwords must match';
+                confirmPasswordFeedback.style.color = '#666';
+            } else if (password === confirmPassword) {
+                confirmPasswordFeedback.textContent = 'Passwords match!';
+                confirmPasswordFeedback.style.color = '#38a169';
+            } else {
+                confirmPasswordFeedback.textContent = 'Passwords do not match';
+                confirmPasswordFeedback.style.color = '#e53e3e';
+            }
+        }
+        
+        // Alert functions
+        function showAlert(id, message = null) {
+            const alert = document.getElementById(id);
+            
+            if (message && id === 'alertError') {
+                document.getElementById('error-message').textContent = message;
+            }
+            
+            alert.style.display = 'flex';
+            
+            // Trigger reflow to allow the transition to work
+            void alert.offsetWidth;
+            
+            alert.classList.add('show');
+            
+            // Automatically hide success messages after 5 seconds
+            if (id === 'alertSuccess') {
+                setTimeout(() => {
+                    hideAlert(id);
+                }, 5000);
+            }
+        }
+        
+        function hideAlert(id) {
+            const alert = document.getElementById(id);
+            alert.classList.remove('show');
+            
+            // Wait for transition to complete before hiding
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 300);
+        }
+        
+        // Form submission
+        const registerForm = document.getElementById('registerForm');
+        
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Basic validation
+            if (password !== confirmPassword) {
+                showAlert('alertError', 'Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showAlert('alertError', 'Password must be at least 8 characters long');
+                return;
+            }
+            
+            // Prepare data for API
+            const registerData = {
+                email: email,
+                password: password
+            };
+            
+            // Send registration request to API
+            fetch('http://127.0.0.1:8000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registerData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.detail || 'Unknown error occurred');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Success case
+                showAlert('alertSuccess');
+                registerForm.reset();
+                
+                // Redirect to login page after successful registration
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            })
+            .catch(error => {
+                // Error case
+                showAlert('alertError', error.message || 'Registration failed');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
