@@ -213,128 +213,6 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         
-        /* Create Post Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-title {
-            font-size: 24px;
-            font-weight: 600;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #888;
-            transition: color 0.2s ease;
-        }
-        
-        .modal-close:hover {
-            color: #333;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
-        }
-        
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border 0.3s ease;
-        }
-        
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        input[type="datetime-local"]:focus,
-        textarea:focus {
-            border-color: #4a6fa5;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-        
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .btn-cancel {
-            background-color: #e2e8f0;
-            color: #4a5568;
-        }
-        
-        .btn-cancel:hover {
-            background-color: #cbd5e0;
-        }
-        
-        .btn-submit {
-            background-color: #4a6fa5;
-            color: white;
-        }
-        
-        .btn-submit:hover {
-            background-color: #3a5a80;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-column {
-            flex: 1;
-        }
-        
         /* Confirmation Dialog */
         .confirmation-dialog {
             display: none;
@@ -436,11 +314,6 @@
                 align-items: flex-start;
                 gap: 10px;
             }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
         }
     </style>
 </head>
@@ -450,7 +323,7 @@
         <header>
             <div class="header-title">
                 <h1>FastAPI Blog</h1>
-                <span class="user-greeting">Hello, <span id="user-email">user@example.com</span></span>
+                <span class="user-greeting">Hello, <span id="user-email"></span></span>
             </div>
             <div class="header-actions">
                 <a href="/profile" class="btn btn-outline">
@@ -470,57 +343,17 @@
 
         <div class="posts-header">
             <h2 class="posts-title">Your Posts</h2>
-            <button id="create-post-btn" class="btn btn-create">
+            <a href="/create-post" class="btn btn-create">
                 <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                 </svg>
                 New Post
-            </button>
+            </a>
         </div>
 
         <ul id="posts-container" class="posts-container">
             <!-- Posts will be dynamically loaded here -->
         </ul>
-    </div>
-
-    <!-- Create/Edit Post Modal -->
-    <div id="post-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title" class="modal-title">Create New Post</h3>
-                <button id="modal-close" class="modal-close">&times;</button>
-            </div>
-            <form id="post-form">
-                <div class="form-row">
-                    <div class="form-column">
-                        <div class="form-group">
-                            <label for="post-id-input">ID</label>
-                            <input type="number" id="post-id-input" placeholder="Enter post ID">
-                            <p class="form-info">Leave empty for auto-generated ID</p>
-                        </div>
-                    </div>
-                    <div class="form-column">
-                        <div class="form-group">
-                            <label for="post-date">Publication Date</label>
-                            <input type="date" id="post-date">
-                            <p class="form-info">Leave empty for current date/time</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="post-title-input">Title</label>
-                    <input type="text" id="post-title-input" placeholder="Enter post title" required>
-                </div>
-                <div class="form-group">
-                    <label for="post-description">Content</label>
-                    <textarea id="post-description" placeholder="Write your post content here" required></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="cancel-btn" class="btn btn-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-submit">Save Post</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <!-- Delete Confirmation Dialog -->
@@ -544,16 +377,6 @@
         // DOM Elements
 const userEmailElement = document.getElementById('user-email');
 const postsContainer = document.getElementById('posts-container');
-const postModal = document.getElementById('post-modal');
-const createPostBtn = document.getElementById('create-post-btn');
-const modalClose = document.getElementById('modal-close');
-const cancelBtn = document.getElementById('cancel-btn');
-const postForm = document.getElementById('post-form');
-const modalTitle = document.getElementById('modal-title');
-const postIdInput = document.getElementById('post-id-input');
-const postTitleInput = document.getElementById('post-title-input');
-const postDescriptionInput = document.getElementById('post-description');
-const postDateInput = document.getElementById('post-date');
 const deleteDialog = document.getElementById('delete-dialog');
 const cancelDelete = document.getElementById('cancel-delete');
 const confirmDelete = document.getElementById('confirm-delete');
@@ -561,10 +384,7 @@ const notification = document.getElementById('notification');
 const logoutBtn = document.getElementById('logout-btn');
 
 let currentPostId = null;
-let editMode = false;
 const API_BASE_URL = 'http://127.0.0.1:8000';
-
-// Token Check
 
 // Get Authorization Header
 function getAuthHeader() {
@@ -589,7 +409,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 async function getUserInfo() {
     try {
         const response = await fetch(`${API_BASE_URL}/users/me`, {
-            headers: getAuthHeader()
+            headers: getAuthHeader(),
+            credentials: 'include' // Añadimos esto para asegurar que se envíen las cookies
         });
         
         if (!response.ok) {
@@ -600,7 +421,8 @@ async function getUserInfo() {
         }
         
         const data = await response.json();
-        userEmailElement.textContent = data.email;
+        // Accedemos al correo electrónico que está en la posición 1 del array "user"
+        userEmailElement.textContent = data.user[1];
     } catch (error) {
         console.error('User info error:', error);
         showNotification('Failed to get user info', 'error');
@@ -609,9 +431,9 @@ async function getUserInfo() {
 
 async function loadPosts() {
     try {
-
-        const response = await fetch(`${API_BASE_URL}/posts-auth`, {
-            headers: getAuthHeader()
+        const response = await fetch(`${API_BASE_URL}/api/user/posts/`, {
+            headers: getAuthHeader(),
+            credentials: 'include'
         });
         
         if (!response.ok) {
@@ -631,7 +453,7 @@ async function loadPosts() {
 
 function renderPosts(posts) {
     postsContainer.innerHTML = '';
-    if (posts.length === 0) {
+    if (!posts || posts.length === 0) {
         postsContainer.innerHTML = `
             <div class="empty-message">
                 <p>No posts yet. Click "New Post" to create one!</p>
@@ -640,28 +462,30 @@ function renderPosts(posts) {
     }
 
     posts.forEach(post => {
+        // Adaptamos el renderizado para manejar el formato de array
+        const id = post[0];
+        const title = post[1];
+        const content = post[2];
+        const created_at = post[3];
+        
         const postElement = document.createElement('li');
         postElement.className = 'post';
         postElement.innerHTML = `
-            <span class="post-id">ID: ${post.id}</span>
-            <strong class="post-title">${escapeHtml(post.title)}</strong>
-            <p class="post-description">${escapeHtml(post.content)}</p>
+            <span class="post-id">ID: ${id}</span>
+            <strong class="post-title">${escapeHtml(title)}</strong>
+            <p class="post-description">${escapeHtml(content)}</p>
             <div class="post-footer">
-                <span class="post-date">Published: ${formatDate(post.created_at)}</span>
+                <span class="post-date">Published: ${formatDate(created_at)}</span>
                 <div class="post-actions">
-                    <button class="edit-btn" data-id="${post.id}">Edit</button>
-                    <button class="delete-btn" data-id="${post.id}">Delete</button>
+                    <a href="/edit-post/${id}" class="edit-btn">Edit</a>
+                    <button class="delete-btn" data-id="${id}">Delete</button>
                 </div>
             </div>
         `;
         postsContainer.appendChild(postElement);
 
-        postElement.querySelector('.edit-btn').onclick = () => {
-            openEditModal(post.id, post.title, post.content, post.created_at);
-        };
-
         postElement.querySelector('.delete-btn').onclick = () => {
-            openDeleteConfirmation(post.id);
+            openDeleteConfirmation(id);
         };
     });
 }
@@ -683,94 +507,6 @@ function formatDate(dateString) {
     }
 }
 
-createPostBtn.onclick = () => {
-    modalTitle.textContent = 'Create Post';
-    postForm.reset();
-    postIdInput.disabled = false;
-    editMode = false;
-    postModal.style.display = 'flex';
-};
-
-function openEditModal(id, title, content, date) {
-    modalTitle.textContent = 'Edit Post';
-    postIdInput.value = id;
-    postTitleInput.value = title;
-    postDescriptionInput.value = content;
-    
-    // Format date for input element
-    if (date) {
-        try {
-            const formattedDate = new Date(date).toISOString().split('T')[0];
-            postDateInput.value = formattedDate;
-        } catch (error) {
-            console.error('Date formatting error:', error);
-            postDateInput.value = '';
-        }
-    } else {
-        postDateInput.value = '';
-    }
-    
-    postIdInput.disabled = true;
-    editMode = true;
-    postModal.style.display = 'flex';
-}
-
-function closeModal() {
-    postModal.style.display = 'none';
-}
-
-modalClose.onclick = closeModal;
-cancelBtn.onclick = closeModal;
-
-postForm.onsubmit = async function (e) {
-    e.preventDefault();
-    
-    try {
-
-        const postData = {
-            title: postTitleInput.value.trim(),
-            content: postDescriptionInput.value.trim()
-        };
-
-        const postId = postIdInput.value;
-        const postDate = postDateInput.value;
-
-        if (postDate) {
-            postData.created_at = new Date(postDate).toISOString();
-        }
-        
-        if (postId && !editMode) {
-            postData.id = parseInt(postId);
-        }
-
-        const url = editMode
-            ? `${API_BASE_URL}/posts/${postId}`
-            : `${API_BASE_URL}/posts`;
-
-        const method = editMode ? 'PUT' : 'POST';
-
-        const response = await fetch(url, {
-            method,
-            headers: getAuthHeader(),
-            body: JSON.stringify(postData)
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Save post error:', errorText);
-            showNotification(`Error saving post: ${response.status}`, 'error');
-            return;
-        }
-
-        closeModal();
-        await loadPosts();
-        showNotification(editMode ? 'Post updated!' : 'Post created!', 'success');
-    } catch (error) {
-        console.error('Save post error:', error);
-        showNotification('Error saving post', 'error');
-    }
-};
-
 function openDeleteConfirmation(id) {
     currentPostId = id;
     deleteDialog.style.display = 'flex';
@@ -782,7 +518,6 @@ cancelDelete.onclick = () => {
 
 confirmDelete.onclick = async () => {
     try {
-
         const response = await fetch(`${API_BASE_URL}/posts/${currentPostId}`, {
             method: 'DELETE',
             headers: getAuthHeader()
@@ -826,7 +561,6 @@ function showNotification(msg, type) {
 }
 
 window.onclick = e => {
-    if (e.target == postModal) closeModal();
     if (e.target == deleteDialog) deleteDialog.style.display = 'none';
 };
     </script>

@@ -11,8 +11,6 @@ load_dotenv()
 
 cursor = Database("db.sqlite").get_connection().cursor()
 
-
-
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = "HS256"
 
@@ -27,7 +25,7 @@ def verify_password(plain_password, hashed_password):
 def authenticate_user(email: str, password: str):
     user = cursor.execute("SELECT * FROM USERS WHERE EMAIL = ?", [email]).fetchall()
 
-    if not user or not verify_password(password, user[0][1]):
+    if not user or not verify_password(password, user[0][2]):
         return False
 
     return user[0]
@@ -57,7 +55,7 @@ def get_current_user(request: Request):
 
         if email is None:
             raise HTTPException(status_code=401, detail="Invalid authentication credentials")
-        user = cursor.execute("SELECT * FROM USERS WHERE EMAIL = ?", [email]).fetchall()[0]
+        user = cursor.execute("SELECT * FROM USERS WHERE EMAIL = ?", [email]).fetchone()
 
         if user is None:
             raise HTTPException(status_code=401, detail="User not found")

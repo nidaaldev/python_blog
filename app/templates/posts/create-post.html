@@ -237,9 +237,7 @@
             <!-- Alert Templates -->
             <div id="alertSuccess" class="alert alert-success" style="display: none;">
                 <div class="alert-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM12 20C16.418 20 20 16.418 20 12C20 7.582 16.418 4 12 4C7.582 4 4 7.582 4 12C4 16.418 7.582 20 12 20ZM16.293 7.293L10 13.586L7.707 11.293L6.293 12.707L10 16.414L17.707 8.707L16.293 7.293Z" fill="currentColor"/>
-                    </svg>
+                    <!-- Icon SVG -->
                 </div>
                 <div class="alert-content">
                     <div class="alert-title">Success!</div>
@@ -250,9 +248,7 @@
 
             <div id="alertError" class="alert alert-error" style="display: none;">
                 <div class="alert-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM12 20C16.418 20 20 16.418 20 12C20 7.582 16.418 4 12 4C7.582 4 4 7.582 4 12C4 16.418 7.582 20 12 20ZM13 12V7H11V12H13ZM13 16V14H11V16H13Z" fill="currentColor"/>
-                    </svg>
+                    <!-- Icon SVG -->
                 </div>
                 <div class="alert-content">
                     <div class="alert-title">Error!</div>
@@ -267,20 +263,6 @@
             </div>
 
             <form action="/create-post">
-                <div class="form-row">
-                    <div class="form-column">
-                        <label for="id">Post ID</label>
-                        <input type="number" id="id" name="id" placeholder="Enter post ID" min="1" required>
-                        <p class="field-hint">Unique identifier for this post</p>
-                    </div>
-                    
-                    <div class="form-column">
-                        <label for="date">Publication Date</label>
-                        <input type="date" id="date" name="date" placeholder="YYYY-MM-DD" required>
-                        <p class="field-hint">Format: YYYY-MM-DD</p>
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" id="title" name="title" placeholder="Enter post title" required>
@@ -292,7 +274,7 @@
                 </div>
 
                 <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='/posts'">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='/dashboard'">Cancel</button>
                     <button type="submit" class="btn btn-primary">Publish Post</button>
                 </div>
             </form>
@@ -300,49 +282,42 @@
     </div>
 
     <script>
-        // Function to show an alert
         function showAlert(id, message = null) {
             const alert = document.getElementById(id);
-            
             if (message && id === 'alertError') {
                 document.getElementById('error-message').textContent = message;
             }
-            
             alert.style.display = 'flex';
-            
             void alert.offsetWidth;
-            
             alert.classList.add('show');
-            
             if (id === 'alertSuccess') {
                 setTimeout(() => {
                     hideAlert(id);
                 }, 5000);
             }
         }
-        
+
         function hideAlert(id) {
             const alert = document.getElementById(id);
             alert.classList.remove('show');
-            
             setTimeout(() => {
                 alert.style.display = 'none';
             }, 300);
         }
-        
+
         const form = document.querySelector('form');
-        
         form.addEventListener('submit', e => {
             e.preventDefault();
 
-            const url = "http://127.0.0.1:8000/create-post"
-            const id = document.querySelector('#id').value
-            const title = document.querySelector('#title').value
-            const description = document.querySelector('#description').value
-            const date = document.querySelector('#date').value
+            const url = "http://127.0.0.1:8000/create-post";
+            const title = document.querySelector('#title').value;
+            const description = document.querySelector('#description').value;
 
-            let data = `{"id": ${id}, "title": "${title}", "description": "${description}", "date": "${date}"}`
-            
+            const data = JSON.stringify({
+                title: title,
+                description: description
+            });
+
             fetch(url, {
                 method: "POST",
                 body: data,
@@ -358,19 +333,17 @@
             })
             .then(data => {
                 showAlert('alertSuccess');
-                
                 form.reset();
-                
                 setTimeout(() => {
-                    window.location.href = '/posts';
+                    window.location.href = '/dashboard';
                 }, 2000);
             })
             .catch(error => {
                 showAlert('alertError', error.message || 'There was a problem publishing your post.');
                 console.error('Error:', error);
             });
-        })
+        });
     </script>
-
 </body>
+</html>
 </html>

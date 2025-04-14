@@ -11,21 +11,27 @@ class Database:
             try:
                 with sqlite3.connect(self.database_file, check_same_thread=False) as conn:
                     cursor = conn.cursor()
-                    cursor.execute("""
-                        CREATE TABLE IF NOT EXISTS POSTS (
-                            id INTEGER PRIMARY KEY,
-                            title TEXT NOT NULL,
-                            description TEXT NOT NULL,
-                            date TEXT NOT NULL
-                            )
-                    """)
 
                     cursor.execute("""
                         CREATE TABLE IF NOT EXISTS USERS (
-                        email TEXT PRIMARY KEY,
+                        id TEXT PRIMARY KEY,
+                        email TEXT UNIQUE,
                         password TEXT NOT NULL
                         )
                     """)
+                    
+                    cursor.execute("""
+                        CREATE TABLE IF NOT EXISTS POSTS (
+                            id TEXT PRIMARY KEY,
+                            title TEXT NOT NULL,
+                            description TEXT NOT NULL,
+                            date TEXT NOT NULL,
+                            author_id TEXT,
+                            FOREIGN KEY (author_id) REFERENCES USERS(id)
+                            )
+                    """)
+
+                    
 
                     print("Database configured successfully!")
                     
