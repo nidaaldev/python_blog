@@ -23,7 +23,6 @@ desktop.ini
 *.swo
 .coverage
 .tox/
-.pytest_cache/
 .cache/
 htmlcov/
 dist/
