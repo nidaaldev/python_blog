@@ -374,7 +374,7 @@
     </div>
 
     <script>
-        // DOM Elements
+
 const userEmailElement = document.getElementById('user-email');
 const postsContainer = document.getElementById('posts-container');
 const deleteDialog = document.getElementById('delete-dialog');
@@ -386,16 +386,6 @@ const logoutBtn = document.getElementById('logout-btn');
 let currentPostId = null;
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
-// Get Authorization Header
-function getAuthHeader() {
-    const token = localStorage.getItem('accessToken');
-    return {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    };
-}
-
-// On load
 document.addEventListener('DOMContentLoaded', async function () {
     try {
         await getUserInfo();
@@ -409,8 +399,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 async function getUserInfo() {
     try {
         const response = await fetch(`${API_BASE_URL}/users/me`, {
-            headers: getAuthHeader(),
-            credentials: 'include' // Añadimos esto para asegurar que se envíen las cookies
+            credentials: 'include'
         });
         
         if (!response.ok) {
@@ -421,7 +410,6 @@ async function getUserInfo() {
         }
         
         const data = await response.json();
-        // Accedemos al correo electrónico que está en la posición 1 del array "user"
         userEmailElement.textContent = data.user[1];
     } catch (error) {
         console.error('User info error:', error);
@@ -432,7 +420,6 @@ async function getUserInfo() {
 async function loadPosts() {
     try {
         const response = await fetch(`${API_BASE_URL}/api/user/posts/`, {
-            headers: getAuthHeader(),
             credentials: 'include'
         });
         
@@ -462,7 +449,6 @@ function renderPosts(posts) {
     }
 
     posts.forEach(post => {
-        // Adaptamos el renderizado para manejar el formato de array
         const id = post[0];
         const title = post[1];
         const content = post[2];
