@@ -4,6 +4,7 @@ from app.models.post import Post
 from fastapi.templating import Jinja2Templates
 from app.services.create_post import create_post as new_post
 from app.services.edit_post import edit_post as edit_p
+from app.services.delete_post import delete_post as delete_p
 from sqlite3 import Error
 from jose import JWTError, jwt
 from app.auth.utils import verify_token, get_current_user
@@ -84,3 +85,12 @@ def edit_post(post_id: str, post: Post, current_user = Depends(verify_token)):
         return { "updated": True }
     except Error as err:
         raise Exception(err)
+
+@router.delete('/delete-post/{post_id}')
+def delete_post(post_id: str, current_user = Depends(verify_token)):
+        try:
+            user_id = current_user["user"][0]
+            delete_p(post_id, user_id)
+            return { "post_deleted": True }
+        except Error as err:
+            raise Exception(err)

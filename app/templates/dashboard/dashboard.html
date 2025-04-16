@@ -504,9 +504,8 @@ cancelDelete.onclick = () => {
 
 confirmDelete.onclick = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/posts/${currentPostId}`, {
+        const response = await fetch(`${API_BASE_URL}/delete-post/${currentPostId}`, {
             method: 'DELETE',
-            headers: getAuthHeader()
         });
 
         if (!response.ok) {
