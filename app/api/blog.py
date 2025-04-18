@@ -13,7 +13,7 @@ router = APIRouter()
 conn = Database("db.sqlite").get_connection()
 templates = Jinja2Templates(directory="templates")
 
-@router.get('/posts')
+@router.get('/')
 def get_posts(request: Request):
     cursor = conn.cursor()
     posts = cursor.execute("SELECT POSTS.TITLE, POSTS.DESCRIPTION, POSTS.DATE, USERS.email FROM POSTS INNER JOIN USERS ON POSTS.author_id=USERS.id").fetchall()
