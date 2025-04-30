@@ -22,7 +22,7 @@ This is a basic blog application built with:
 1. Clone the repository
 2. Install dependencies:
    ```
-   pip install fastapi uvicorn jinja2 python-multipart python-jose[cryptography] passlib[bcrypt]
+   pip install -r requirements.txt
    ```
 3. Run the application:
    ```
