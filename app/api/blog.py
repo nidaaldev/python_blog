@@ -6,8 +6,7 @@ from app.services.create_post import create_post as new_post
 from app.services.edit_post import edit_post as edit_p
 from app.services.delete_post import delete_post as delete_p
 from sqlite3 import Error
-from jose import JWTError, jwt
-from app.auth.utils import verify_token, get_current_user
+from app.auth.utils import verify_token
 
 router = APIRouter()
 conn = Database("db.sqlite").get_connection()
@@ -22,14 +21,14 @@ def get_posts(request: Request):
 
 # Experimental /API endpoint
 @router.get('/api/posts/')
-def get_posts(request: Request):
+def get_posts():
     cursor = conn.cursor()
     posts = cursor.execute("SELECT * FROM POSTS").fetchall()
 
     return posts
 
 @router.get('/api/user/posts/')
-def get_posts(request: Request, current_user = Depends(verify_token)):
+def get_posts(current_user = Depends(verify_token)):
     author_id = current_user["user"][0]
     cursor = conn.cursor()
     posts = cursor.execute("SELECT * FROM POSTS WHERE author_id = ?", [author_id]).fetchall()
@@ -38,7 +37,6 @@ def get_posts(request: Request, current_user = Depends(verify_token)):
 
 @router.get('/posts/{post_id}')
 def get_post(post_id: str):
-    print("Execute!")
     cursor = conn.cursor()
     post = cursor.execute("SELECT * FROM POSTS WHERE ID = ?", [post_id]).fetchone()
 

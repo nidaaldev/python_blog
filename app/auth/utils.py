@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from dotenv import load_dotenv
 from fastapi import Depends, Security, HTTPException, Request
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 
 load_dotenv()

@@ -11,7 +11,6 @@ This is a basic blog application built with:
 - Basic HTML/CSS for the frontend
 
 ## Features
-
 - User authentication (login/register)
 - Dashboard for managing posts
 - Create, edit, and delete blog posts
@@ -21,16 +20,19 @@ This is a basic blog application built with:
 
 1. Clone the repository
 2. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-3. Run the application:
-   ```
-   fastapidev dev main.py
-   ```
+```
+pip install -r requirements.txt
+```
+3. Create a `.env` file in the root directory with your JWT secret key:
+```
+SECRET_KEY=your_secure_random_string_here
+```
+4. Run the application:
+```
+fastapidev dev main.py
+```
 
 ## Project Structure
-
 - `/api` - API routes and endpoints
 - `/auth` - Authentication utilities
 - `/db` - Database configuration
@@ -39,8 +41,12 @@ This is a basic blog application built with:
 - `/templates` - HTML templates
 - `/tests` - Unit tests
 
-## Learning Goals
+## Environment Variables
 
+The project uses the following environment variables:
+- `SECRET_KEY` - A secure random string used for JWT token signing and verification. This key is essential for the authentication system to work properly and should be kept secret.
+
+## Learning Goals
 - Understanding FastAPI framework
 - Working with databases
 - Implementing authentication
@@ -48,5 +54,4 @@ This is a basic blog application built with:
 - Basic testing
 
 ## Note
-
 This is a learning project and may not follow all best practices. Feel free to suggest improvements or use it as a starting point for your own learning journey!
