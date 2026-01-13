@@ -29,7 +29,7 @@ SECRET_KEY=your_secure_random_string_here
 ```
 4. Run the application:
 ```
-fastapidev dev main.py
+fastapi dev main.py
 ```
 
 ## Project Structure
